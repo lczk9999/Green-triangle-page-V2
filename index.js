@@ -1,162 +1,234 @@
-// --- 1. SISTEMA DE BUSCA ---
-function toggleLinks() {
-    const container = document.getElementById('links-container');
-    // fiz esse if pra abrir e fechar a lista de links
-    if (container.style.display === 'flex') {
-        container.style.display = 'none';
-    } else {
-        container.style.display = 'flex';
+function showSearchLinks() {
+    const query = document.getElementById('campo-busca').value.trim();
+    if (query !== "") {
+        document.getElementById('div-links').style.display = 'block';
     }
 }
 
-// --- 2. LOGICA DO CRONOMETRO ---
-let relogio;
-let tempo = 0;
-
-function updateStopwatchDisplay() {
-    let totalSegundos = Math.floor(tempo / 1000);
-    let horas = Math.floor(totalSegundos / 3600);
-    let minutos = Math.floor((totalSegundos % 3600) / 60);
-    let segundos = totalSegundos % 60;
-    
-    // Aluno usa IF normal em vez de ternario complexo
-    if (horas < 10) { horas = "0" + horas; }
-    if (minutos < 10) { minutes = "0" + minutos; } // typo proposital comum em variavel misturada
-    if (segundos < 10) { segundos = "0" + segundos; }
-
-    let displayStr = horas + ":" + minutos + ":" + segundos;
-    document.getElementById('stopwatch-display').innerText = displayStr;
+function hideSearchLinks() {
+    setTimeout(() => {
+        document.getElementById('div-links').style.display = 'none';
+    }, 300);
 }
 
-function startStopwatch() {
-    clearInterval(relogio);
-    let startTime = Date.now() - tempo;
-    relogio = setInterval(() => {
-        tempo = Date.now() - startTime;
+const searchInput = document.getElementById('campo-busca');
+if (searchInput) {
+    searchInput.addEventListener('focus', showSearchLinks);
+    searchInput.addEventListener('blur', hideSearchLinks);
+}
+
+function buscar() {
+    const query = document.getElementById('campo-busca').value.trim();
+    if (query !== "") {
+        document.getElementById('div-links').style.display = 'block';
+    }
+}
+
+function initCalendar() {
+    const today = new Date();
+    const calendarDisplay = document.getElementById('mostrar-calendario');
+
+    if (calendarDisplay) {
+        const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        
+        const dayName = weekdays[today.getDay()];
+        const dayNumber = today.getDate();
+        const monthName = months[today.getMonth()];
+        const currentYear = today.getFullYear();
+        
+        calendarDisplay.innerText = `${dayName}, ${monthName} ${dayNumber}, ${currentYear}`;
+    }
+}
+
+let stopwatchInterval;
+let elapsedTime = 0;
+
+function updateStopwatchDisplay() {
+    const totalSeconds = Math.floor(elapsedTime / 1000);
+
+    let hours = Math.floor(totalSeconds / 3600);
+    let minutes = Math.floor((totalSeconds % 3600) / 60);
+    let seconds = totalSeconds % 60;
+
+    hours = hours < 10 ? "0" + hours : hours;
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+
+    document.getElementById('tempo').innerText = `${hours}:${minutes}:${seconds}`;
+}
+
+function iniciar() {
+    if (stopwatchInterval) return;
+
+    const startTime = Date.now() - elapsedTime;
+
+    stopwatchInterval = setInterval(() => {
+        elapsedTime = Date.now() - startTime;
         updateStopwatchDisplay();
     }, 100);
 }
 
-function stopStopwatch() {
-    clearInterval(relogio);
+function parar() {
+    clearInterval(stopwatchInterval);
+    stopwatchInterval = null;
 }
 
-// --- 3. CALENDARIO AUTOMATICO ----
-function loadCalendar() {
-    // peguei esse codigo da internet pra formatar a data
-    const options = {weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'};
-    const today = new Date();
-    document.getElementById('calendar-display').innerText = today.toLocaleDateString('en-US', options);
+function limpar() {
+    clearInterval(stopwatchInterval);
+    stopwatchInterval = null;
+    elapsedTime = 0;
+    updateStopwatchDisplay();
 }
-loadCalendar();
 
-// --- 4. JOGO DO TRIANGULO ---
-let gameActive = false;
+function salvarNotas() {
+    const noteText = document.getElementById('texto-notas').value;
+    localStorage.setItem('userNotes', noteText);
+}
+
+function loadNotes() {
+    const savedNotes = localStorage.getItem('userNotes');
+    if (savedNotes) {
+        document.getElementById('texto-notas').value = savedNotes;
+    }
+}
+
+let isGameRunning = false;
 let obstacleTimeout;
-let score = 0;
+let obstacleInterval;
+let currentScore = 0;
 let isJumping = false;
+let playerHeight = 3;
 
-function toggleGame() {
-    const gameBox = document.getElementById('game-container');
-    if (gameBox.style.display === 'block') {
-        gameBox.style.display = 'none';
+function alternarJogo() {
+    const gameScreen = document.getElementById('tela-do-jogo');
+
+    if (gameScreen.style.display === 'block') {
+        gameScreen.style.display = 'none';
         stopGame();
     } else {
-        gameBox.style.display = 'block';
+        gameScreen.style.display = 'block';
         startGame();
     }
 }
 
 function startGame() {
-    gameActive = true;
-    score = 0;
-    document.getElementById('game-score').innerText = "Score: " + score;
+    isGameRunning = true;
+    currentScore = 0;
+    isJumping = false;
+    playerHeight = 3;
 
-    // limpa os blocos vermelhos antigos da tela
-    const oldObstacles = document.querySelectorAll('.obstacle');
-    oldObstacles.forEach(obs => obs.remove());
+    document.getElementById('pontos').innerText = "Score: " + currentScore;
 
-    const player = document.getElementById('player-triangle');
-    player.style.bottom = "0px";
+    const activeObstacles = document.querySelectorAll('.obstacle');
+    activeObstacles.forEach(obstacle => obstacle.remove());
+
+    const player = document.getElementById('boneco');
+    if (player) {
+        player.style.bottom = "3px";
+    }
 
     clearTimeout(obstacleTimeout);
+    clearInterval(obstacleInterval);
+
     spawnObstacle();
 }
 
 function stopGame() {
-    gameActive = false;
+    isGameRunning = false;
     clearTimeout(obstacleTimeout);
+    clearInterval(obstacleInterval);
 }
 
-function jump() {
-    if (!gameActive || isJumping) return;
+function handleJump() {
+    if (!isGameRunning || isJumping) return;
+
     isJumping = true;
-    const player = document.getElementById('player-triangle');
+    const player = document.getElementById('boneco');
+    playerHeight = 3;
 
-    let position = 0;
+    const jumpUp = setInterval(() => {
+        if (playerHeight >= 58) {
+            clearInterval(jumpUp);
 
-    // subida do boneco
-    let upInterval = setInterval(() => {
-        if (position >= 55) {
-            clearInterval(upInterval);
+            const fallDown = setInterval(() => {
+                playerHeight -= 3;
 
-            // descida do boneco
-            let downInterval = setInterval(() => {
-                if (position <= 0) {
-                    clearInterval(downInterval);
+                if (playerHeight <= 3) {
+                    playerHeight = 3;
+                    clearInterval(fallDown);
                     isJumping = false;
                 }
-                position -= 3;
-                player.style.bottom = position + 'px';
+                player.style.bottom = playerHeight + 'px';
             }, 15);
+
+        } else {
+            playerHeight += 4;
+            player.style.bottom = playerHeight + 'px';
         }
-        position += 4;
-        player.style.bottom = position + 'px';
     }, 15);
 }
 
 function spawnObstacle() {
-    if (!gameActive) return;
+    if (!isGameRunning) return;
 
-    const container = document.getElementById('game-container');
+    const gameContainer = document.getElementById('tela-do-jogo');
     const obstacle = document.createElement('div');
     obstacle.classList.add('obstacle');
-    container.appendChild(obstacle);
+    gameContainer.appendChild(obstacle);
 
-    let obstaclePos = 220;
+    let obstaclePositionX = 180;
 
-    // mexer o obstaculo na tela
-    function moveObstacle() {
-        if (!gameActive) {
+    obstacleInterval = setInterval(() => {
+        if (!isGameRunning) {
+            clearInterval(obstacleInterval);
             obstacle.remove();
             return;
         }
-        obstaclePos -= 3;
-        obstacle.style.left = obstaclePos + 'px';
 
-        const player = document.getElementById('player-triangle');
-        let playerBottom = parseInt(player.style.bottom) || 0;
+        obstaclePositionX -= 3;
+        obstacle.style.left = obstaclePositionX + 'px';
 
-        // checar se bateu (colisao)
-        if (obstaclePos > 20 && obstaclePos < 40 && playerBottom < 15) {
-            gameActive = false; 
-            clearTimeout(obstacleTimeout);
-            alert("Game Over! Your Score: " + score);
-            startGame();
+        if (obstaclePositionX > 5 && obstaclePositionX < 25 && playerHeight < 20) {
+            stopGame();
+            obstacle.remove();
+            setTimeout(() => {
+                alert("Game Over! Your score was: " + currentScore);
+            }, 10);
             return;
         }
-        
-        if (obstaclePos < -15) {
+
+        if (obstaclePositionX < -20) {
+            clearInterval(obstacleInterval);
             obstacle.remove();
-            score++;
-            document.getElementById('game-score').innerText = "Score: " + score;
-        } else {
-            requestAnimationFrame(moveObstacle);
+            currentScore += 1;
+            document.getElementById('pontos').innerText = "Score: " + currentScore;
         }
+    }, 20);
+
+    const randomSpawnDelay = Math.random() * 2000 + 1500;
+    obstacleTimeout = setTimeout(spawnObstacle, randomSpawnDelay);
+}
+
+document.addEventListener('keydown', (event) => {
+    if (event.code === 'Space') {
+        if (isGameRunning) {
+            event.preventDefault();
+        }
+        handleJump();
     }
-    requestAnimationFrame(moveObstacle);
+});
 
-    // sorteia um tempo aleatorio pro proximo vir
-    let randomTime = Math.random() * 2000 + 1500;
-    obstacleTimeout = setTimeout(spawnObstacle, randomTime);
+document.getElementById('tela-do-jogo').addEventListener('click', handleJump);
+
+function initApp() {
+    initCalendar();
+    loadNotes();
+    updateStopwatchDisplay();
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initApp);
+} else {
+    initApp();
 }

@@ -2,73 +2,69 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stardew Hack Club</title>
+    <title>Stardence Hack Club - Meu projeto</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-    <!--Backgroud Effects-->
-    <div class="background-effects">
-        <div class="fog"></div>
-        <div class="wave"></div>
+<div class="esquerda">
+
+<div class="caixa-cronometro">
+<h3>Stopwatch</h3>
+<div id="tempo">00:00:00</div>
+<button id="btn1" onclick="iniciar()">Start</button>
+<button id="btn2" onclick="parar()">Stop</button>
+<button id="btn3" onclick="limpar()">Reset</button>
+</div>
+
+<div class="caixa-calendario">
+    <h3>Calendar</h3>
+    <div id="mostrar-calendario"></div>
+</div>
+
+<div class="caixa-notas">
+    <h3>Notes</h3>
+    <textarea id="texto-notas"></textarea>
+    <button onclick="salvarNotas()">Save</button>
+</div>
+
+</div>
+
+<div class="centro">
+    <h1 class="titulo">STARDENCE HACK CLUB</h1>
+
+    <div class="triangulo"></div>
+
+    <div class="busca">
+    <input type="text" id="campo-busca" placeholder="Search...">
+    <button onclick="buscar()">Search</button>
+
+    <div class="links" id="div-links">
+        <a href="https://google.com" target="_blank">Google</a>
+        <a href="https://youtube.com" target="_blank">Youtube</a>
+        <a href="https://github.com" target="_blank">Meu Github</a>
     </div>
-
-    <!--Stopwatch and Calendar-->
-    <div class="left-side">
-        <div class="widget">
-            <div class="widget-title">Stopwatch</div>
-            <div id="stopwatch-display">00:00:00</div>
-            <button id="btn-start" onclick="startStopwatch()">Start</button>
-            <button id="btn-stop" onclick="stopStopwatch()">Stop</button>
-            <button onclick="resetStopwatch()">Reset</button>
-        </div>
-
-        <!--Calendar-->
-        <div class="widget">
-            <div class="widget-title">Calendar</div>
-            <div id="calendar-display"></div>
-        </div>
     </div>
+</div>
 
-    <!--Center triangle-->
-    <div class="center-container">
-        <h1 class="main-title">STARDEW HACK CLUB</h1>
+<div class="direita">
 
-        <div class="brick-triangle"></div>
+<div class="caixa-jogo">
+ <h3>Triangle Game</h3>
+ <button onclick="alternarJogo()">Open Game</button>
 
-        <div class="search-box">
-            <input type="text" id="search-input" placeholder="Type or click Search...">
-            <button onclick="toggleLinks()">Search</button>
+ <div id="tela-do-jogo">
+     <div id="pontos">Score: 0</div>
+     <div id="boneco"></div>
+     <div class="chao"></div>
+ </div>
 
-            <div class="quick-links" id="links-container">
-                 <a href="https://youtube.com" target="_blank">YouTube</a>
-                 <a href="https://google.com" target="_blank">Google</a>
-                 <a href="https://chatgpt.com" target="_blank">ChatGPT</a>
-            </div>
-        </div>
-    </div>
+</div>
 
-    <!--Notpad and +-->
-    <div class="right-side">
-        <div class="widget" style="width: 210px;">
-            <div class="widget-title">Dino Triangle Game</div>
-            <button onclick="toggleGame()" style="margin-bottom: 10px;">Open/Close Game</button>
-            <div id="game-container" onclick="jump()">
-                <div id="game-score">Score: 0</div>
-                <div id="player-triangle"></div>
-                <div class="game-floor"></div>
-            </div>
-            <span class="game-instruction">Click inside game box to jump</span>
-        </div>
+</div>
 
-        <!--Notpad-->
-        <div class="widget">
-            <div class="widget-title">Hacker Notes</div>
-            <textarea id="notepad" placeholder="Write your notes here..."></textarea>
-        </div>
-    </div>
+<script src="index.js"></script>
 
-    <script src="index.js"></script>
 </body>
 </html>
