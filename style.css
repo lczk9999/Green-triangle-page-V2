@@ -10,13 +10,7 @@ body {
     gap: 20px;
 }
 
-.esquerda {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.direita {
+.esquerda, .direita {
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -35,16 +29,12 @@ body {
 }
 
 .triangulo {
-    width: 200px;
-    height: 200px;
-    margin: 0 auto 20px auto;
-    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-    background-color: #e5c100;
-    background-image:
-      linear-gradient(rgba(0, 0, 0, 0.4) 2px, transparent 2px),
-      linear-gradient(90deg, rgba(0, 0, 0, 0.4) 2px, transparent 2px);
-    background-size: 20px 10px;
-    box-shadow: 0 0 10px #ccff00, 0 0 25px #ccff00, 0 0 50px #ccff00;
+    width: 350px;
+    height: 290px;
+    margin: 0 auto 20px auto; 
+   background-color: #e5c100;
+   clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    
 }
 
 #campo-busca {
@@ -52,64 +42,29 @@ body {
     padding: 5px;
 }
 
-.caixa-cronometro {
-    background-color: #222;
-    border: 1px solid #ccff00;
-    padding: 10px;
-    width: 180px;
+#texto-notas {
+    width: 160px;
+    height: 80px;
 }
 
-.caixa-cronometro button {
-    background-color: #ccff00;
-    color: black;
-    border: none;
-    padding: 5px;
-    margin: 2px;
-    cursor: pointer;
-}
-
-.caixa-calendario {
-    background-color: #222;
-    border: 1px solid #ccff00;
-    padding: 10px;
-    width: 180px;
-}
-
-.caixa-jogo {
-    background-color: #222;
-    border: 1px solid #ccff00;
-    padding: 10px;
-    width: 180px;
-}
-
-.caixa-jogo button {
-    background-color: #ccff00;
-    color: black;
-    border: none;
-    padding: 5px;
-    margin: 2px;
-    cursor: pointer;
-}
-
+.caixa-cronometro,
+.caixa-calendrio,
+.caixa-jogo,
 .caixa-notas {
     background-color: #222;
     border: 1px solid #ccff00;
     padding: 10px;
-    width: 180px;
+    width: 180;
 }
-
+.caixa-cronometro button,
+.caixa-jogo button,
 .caixa-notas button {
     background-color: #ccff00;
     color: black;
     border: none;
     padding: 5px;
-    margin: 2px;
+    margin: 2px;;
     cursor: pointer;
-}
-
-#texto-notas {
-    width: 160px;
-    height: 80px;
 }
 
 #tela-do-jogo {
@@ -133,11 +88,11 @@ body {
 }
 
 .chao {
-    position: absolute;
+    position:absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 3px;
+    height:3px;
     background-color: #ccff00;
 }
 
@@ -150,7 +105,7 @@ body {
 }
 
 #div-links {
-    display: none;
+    display:none;
 }
 
 #pontos {
