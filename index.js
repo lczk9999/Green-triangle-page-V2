@@ -14,14 +14,8 @@ function hideSearchLinks() {
 const searchInput = document.getElementById('campo-busca');
 if (searchInput) {
     searchInput.addEventListener('focus', showSearchLinks);
+    searchInput.addEventListener('input', showSearchLinks);
     searchInput.addEventListener('blur', hideSearchLinks);
-}
-
-function buscar() {
-    const query = document.getElementById('campo-busca').value.trim();
-    if (query !== "") {
-        document.getElementById('div-links').style.display = 'block';
-    }
 }
 
 function initCalendar() {
@@ -95,7 +89,7 @@ function loadNotes() {
 
 let isGameRunning = false;
 let obstacleTimeout;
-let obstacleInterval;
+let activeObstacleIntervals = [];
 let currentScore = 0;
 let isJumping = false;
 let playerHeight = 3;
@@ -129,7 +123,8 @@ function startGame() {
     }
 
     clearTimeout(obstacleTimeout);
-    clearInterval(obstacleInterval);
+    activeObstacleIntervals.forEach(clearInterval);
+    activeObstacleIntervals = [];
 
     spawnObstacle();
 }
@@ -137,7 +132,8 @@ function startGame() {
 function stopGame() {
     isGameRunning = false;
     clearTimeout(obstacleTimeout);
-    clearInterval(obstacleInterval);
+    activeObstacleIntervals.forEach(clearInterval);
+    activeObstacleIntervals = [];
 }
 
 function handleJump() {
@@ -179,9 +175,9 @@ function spawnObstacle() {
 
     let obstaclePositionX = 180;
 
-    obstacleInterval = setInterval(() => {
+    const currentInterval = setInterval(() => {
         if (!isGameRunning) {
-            clearInterval(obstacleInterval);
+            clearInterval(currentInterval);
             obstacle.remove();
             return;
         }
@@ -199,12 +195,14 @@ function spawnObstacle() {
         }
 
         if (obstaclePositionX < -20) {
-            clearInterval(obstacleInterval);
+            clearInterval(currentInterval);
             obstacle.remove();
             currentScore += 1;
             document.getElementById('pontos').innerText = "Score: " + currentScore;
         }
     }, 20);
+
+    activeObstacleIntervals.push(currentInterval);
 
     const randomSpawnDelay = Math.random() * 2000 + 1500;
     obstacleTimeout = setTimeout(spawnObstacle, randomSpawnDelay);
@@ -219,7 +217,10 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
-document.getElementById('tela-do-jogo').addEventListener('click', handleJump);
+const gameClickArea = document.getElementById('tela-do-jogo');
+if (gameClickArea) {
+    gameClickArea.addEventListener('click', handleJump);
+}
 
 function initApp() {
     initCalendar();
@@ -234,24 +235,31 @@ if (document.readyState === 'loading') {
 }
 
 let blocoSelecionado = null;
+let clickOffsetX = 0;
+let clickOffsetY = 0;
 
 const todosOsBlocos = document.querySelectorAll('.arrastavel');
 todosOsBlocos.forEach(bloco => {
     const cabecalho = bloco.querySelector('h3');
     if (cabecalho) {
-        cabecalho.addEventListener('mousedown', () => {
-            blocoSelecionado = bloco;
-            bloco.style.position = 'fixed';
-            bloco.style.zIndex = '1000';
-            bloco.style.margin = '0';
+    cabecalho.addEventListener('mousedown', (e) => {
+     blocoSelecionado = bloco;
+            
+    const rect = bloco.getBoundingClientRect();
+       clickOffsetX = e.clientX - rect.left;
+     clickOffsetY = e.clientY - rect.top;
+
+      bloco.style.position = 'fixed';
+ bloco.style.zIndex = '1000';
+     bloco.style.margin = '0';
         });
     }
 });
 
 document.addEventListener('mousemove', (e) => {
-    if (blocoSelecionado) {
-        blocoSelecionado.style.left = e.clientX + 'px';
-        blocoSelecionado.style.top = e.clientY + 'px';
+ if (blocoSelecionado) {
+  blocoSelecionado.style.left = (e.clientX - clickOffsetX) + 'px';
+ blocoSelecionado.style.top = (e.clientY - clickOffsetY) + 'px';
     }
 });
 
