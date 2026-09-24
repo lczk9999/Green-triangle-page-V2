@@ -10,7 +10,7 @@
 
 <div class="esquerda">
 
-<div class="caixa-cronometro">
+<div class="caixa-cronometro arrastavel" draggble="true">
 <h3>Stopwatch</h3>
 <div id="tempo">00:00:00</div>
 <button id="btn1" onclick="iniciar()">Start</button>
@@ -18,12 +18,12 @@
 <button id="btn3" onclick="limpar()">Reset</button>
 </div>
 
-<div class="caixa-calendario">
+<div class="caixa-calendario arrastavel" draggable="true">
     <h3>Calendar</h3>
     <div id="mostrar-calendario"></div>
 </div>
 
-<div class="caixa-notas">
+<div class="caixa-notas arrastavel" draggable="true">
     <h3>Notes</h3>
     <textarea id="texto-notas"></textarea>
     <button onclick="salvarNotas()">Save</button>
@@ -50,7 +50,7 @@
 
 <div class="direita">
 
-<div class="caixa-jogo">
+<div class="caixa-jogo arrastavel" draggable="true">
  <h3>Triangle Game</h3>
  <button onclick="alternarJogo()">Open Game</button>
 

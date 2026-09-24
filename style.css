@@ -114,3 +114,12 @@ body {
     left: 5px;
     z-index: 2;
 }
+
+.arrastavel h3 {
+    cursor: grab;
+    user-select: none;
+}
+
+.arrastavel h3:active {
+    cursor: grabbing;
+}

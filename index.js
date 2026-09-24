@@ -232,3 +232,38 @@ if (document.readyState === 'loading') {
 } else {
     initApp();
 }
+
+// FUNÇAO NOVA DE ARRASTAR AS JANELAS
+
+function configuracaoDoArrastando() {
+    const listaDeTodosOsBlocos = document.querySelectorAll('.arrastavel');
+
+listaDeTodosOsBlocos.forEach(bloco => {
+    const pegandoBloco = bloco.querySelector('h3');
+     if (!pegandoBloco) return;
+
+ pegandoBloco.addEventListener('mousedown', (e) => {
+     bloco.style.position = 'fixed';
+            bloco.style.zIndex = '1000';
+            bloco.style.margin = '0';
+
+            let deslocamentoX = e.clientX - bloco.getBoundingClientRect().left;
+            let deslocamentoY = e.clientY - bloco.getBoundingClientRect().top;
+
+ function moverJanela(evento) {
+                bloco.style.left = (evento.clientX - deslocamentoX) + 'px';
+                bloco.style.top = (evento.clientY - deslocamentoY) + 'px';
+}
+
+ function configuracaoDoDesarrastando() {
+                document.removeEventListener('mousemove', moverJanela);
+                document.removeEventListener('mouseup', configuracaoDoDesarrastando);
+}
+
+    document.addEventListener('mousemove', moverJanela);
+     document.addEventListener('mouseup', configuracaoDoDesarrastando);
+ });
+});
+}
+
+configuracaoDoArrastando();
