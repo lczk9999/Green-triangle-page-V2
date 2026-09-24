@@ -233,37 +233,28 @@ if (document.readyState === 'loading') {
     initApp();
 }
 
-// FUNÇAO NOVA DE ARRASTAR AS JANELAS
+let blocoSelecionado = null;
 
-function configuracaoDoArrastando() {
-    const listaDeTodosOsBlocos = document.querySelectorAll('.arrastavel');
-
-listaDeTodosOsBlocos.forEach(bloco => {
-    const pegandoBloco = bloco.querySelector('h3');
-     if (!pegandoBloco) return;
-
- pegandoBloco.addEventListener('mousedown', (e) => {
-     bloco.style.position = 'fixed';
+const todosOsBlocos = document.querySelectorAll('.arrastavel');
+todosOsBlocos.forEach(bloco => {
+    const cabecalho = bloco.querySelector('h3');
+    if (cabecalho) {
+        cabecalho.addEventListener('mousedown', () => {
+            blocoSelecionado = bloco;
+            bloco.style.position = 'fixed';
             bloco.style.zIndex = '1000';
             bloco.style.margin = '0';
-
-            let deslocamentoX = e.clientX - bloco.getBoundingClientRect().left;
-            let deslocamentoY = e.clientY - bloco.getBoundingClientRect().top;
-
- function moverJanela(evento) {
-                bloco.style.left = (evento.clientX - deslocamentoX) + 'px';
-                bloco.style.top = (evento.clientY - deslocamentoY) + 'px';
-}
-
- function configuracaoDoDesarrastando() {
-                document.removeEventListener('mousemove', moverJanela);
-                document.removeEventListener('mouseup', configuracaoDoDesarrastando);
-}
-
-    document.addEventListener('mousemove', moverJanela);
-     document.addEventListener('mouseup', configuracaoDoDesarrastando);
- });
+        });
+    }
 });
-}
 
-configuracaoDoArrastando();
+document.addEventListener('mousemove', (e) => {
+    if (blocoSelecionado) {
+        blocoSelecionado.style.left = e.clientX + 'px';
+        blocoSelecionado.style.top = e.clientY + 'px';
+    }
+});
+
+document.addEventListener('mouseup', () => {
+    blocoSelecionado = null;
+});
