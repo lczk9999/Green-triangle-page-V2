@@ -54,7 +54,7 @@ body {
     background-color: #222;
     border: 1px solid #ccff00;
     padding: 10px;
-    width: 180;
+    width: 180px;
 }
 .caixa-cronometro button,
 .caixa-jogo button,
@@ -105,7 +105,36 @@ body {
 }
 
 #div-links {
-    display:none;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+#div-links a {
+    background-color: #ccff00;
+    color: black;
+    text-decoration: none;
+    padding: 8px 12px;
+    font-weight: bold;
+    font-size: 14px;
+    border-radius: 4px;
+    transition: transform 0.1s;
+}
+
+#div-links a:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 8px #ccff00;
+}
+
+#btn-reniciar {
+    background-color: #ff3333 !important;
+    color: white !important;
+    font-weight: bold;
+}
+
+#btn-reniciar:hover {
+    box-shadow: 0 0 8px #ff3333;
 }
 
 #pontos {

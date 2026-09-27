@@ -1,23 +1,3 @@
-function showSearchLinks() {
-    const query = document.getElementById('campo-busca').value.trim();
-    if (query !== "") {
-        document.getElementById('div-links').style.display = 'block';
-    }
-}
-
-function hideSearchLinks() {
-    setTimeout(() => {
-        document.getElementById('div-links').style.display = 'none';
-    }, 300);
-}
-
-const searchInput = document.getElementById('campo-busca');
-if (searchInput) {
-    searchInput.addEventListener('focus', showSearchLinks);
-    searchInput.addEventListener('input', showSearchLinks);
-    searchInput.addEventListener('blur', hideSearchLinks);
-}
-
 function initCalendar() {
     const today = new Date();
     const calendarDisplay = document.getElementById('mostrar-calendario');
@@ -136,6 +116,11 @@ function stopGame() {
     activeObstacleIntervals = [];
 }
 
+function reiniciarJogo() {
+    stopGame();
+    startGame();
+}
+
 function handleJump() {
     if (!isGameRunning || isJumping) return;
 
@@ -242,24 +227,24 @@ const todosOsBlocos = document.querySelectorAll('.arrastavel');
 todosOsBlocos.forEach(bloco => {
     const cabecalho = bloco.querySelector('h3');
     if (cabecalho) {
-    cabecalho.addEventListener('mousedown', (e) => {
-     blocoSelecionado = bloco;
+        cabecalho.addEventListener('mousedown', (e) => {
+            blocoSelecionado = bloco;
             
-    const rect = bloco.getBoundingClientRect();
-       clickOffsetX = e.clientX - rect.left;
-     clickOffsetY = e.clientY - rect.top;
+            const rect = bloco.getBoundingClientRect();
+            clickOffsetX = e.clientX - rect.left;
+            clickOffsetY = e.clientY - rect.top;
 
-      bloco.style.position = 'fixed';
- bloco.style.zIndex = '1000';
-     bloco.style.margin = '0';
+            bloco.style.position = 'fixed';
+            bloco.style.zIndex = '1000';
+            bloco.style.margin = '0';
         });
     }
 });
 
 document.addEventListener('mousemove', (e) => {
- if (blocoSelecionado) {
-  blocoSelecionado.style.left = (e.clientX - clickOffsetX) + 'px';
- blocoSelecionado.style.top = (e.clientY - clickOffsetY) + 'px';
+    if (blocoSelecionado) {
+        blocoSelecionado.style.left = (e.clientX - clickOffsetX) + 'px';
+        blocoSelecionado.style.top = (e.clientY - clickOffsetY) + 'px';
     }
 });
 
